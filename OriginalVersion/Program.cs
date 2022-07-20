@@ -59,7 +59,7 @@ namespace Notino.Homework
 
             // File.Open does not handle exceptions (access rights, full disk, path, ...)
             //  -> add try/catch, log error, return an approriate message to the user
-            var targetStream = File.Open(targetFileName, FileMode.Create, FileAccess.Write);
+            using var targetStream = File.Open(targetFileName, FileMode.Create, FileAccess.Write);
 
             // stream not disposed
             //var sw = new StreamWriter(targetStream);
