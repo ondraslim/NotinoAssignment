@@ -22,6 +22,7 @@ public class DocumentService : IDocumentService
 
     public DocumentDownloadModel ConvertDocument(string content, FileType sourceType, FileType targetType)
     {
+        ValidateDocumentConvertType(sourceType, targetType);
         var deserializer = GetSerializerForType(sourceType);
         var document = deserializer.DeserializeDocument(content);
 
@@ -34,14 +35,46 @@ public class DocumentService : IDocumentService
         return new DocumentDownloadModel(stream, mime, extension);
     }
 
-    public void SaveDocument(string content, FileType type, string path)
+    private static void ValidateDocumentConvertType(FileType sourceType, FileType targetType)
     {
+        if (sourceType is FileType.Unknown || targetType is FileType.Unknown)
+        {
+            throw new ArgumentException();
+        }
 
+        if (sourceType == targetType)
+        {
+            throw new ArgumentException();
+        }
     }
 
-    public FileStream GetDocument(FileType type, string path)
+    public void SaveDocumentAsync(string filename, string content, string path)
     {
-        throw new NotImplementedException();
+        if (!IsAllowedPath(path))
+        {
+            throw new ArgumentException();
+        }
+
+        path = Path.Combine(path, filename);
+
+        using var fs = File.CreateText(path);
+        fs.Write(content);
+    }
+
+    private static bool IsAllowedPath(string path) => File.Exists(path);
+
+    public DocumentDownloadModel GetDocument(string path)
+    {
+        if (!IsAllowedPath(path))
+        {
+            throw new ArgumentException();
+        }
+
+        var stream = File.OpenRead(path);
+        var mime = ContentTypeMappingHelper.GetMimeTypeForFileExtension(Path.GetExtension(path));
+        var extension = Path.GetExtension(path);
+
+        return new DocumentDownloadModel(stream, mime, extension);
     }
 
     public async Task<DocumentDownloadModel> DownloadFromUrlAsync(string url)
@@ -57,6 +90,7 @@ public class DocumentService : IDocumentService
         return new DocumentDownloadModel(stream, mime, extension);
     }
 
+    
     private IDocumentSerializer GetSerializerForType(FileType sourceType)
         => sourceType switch
         {
