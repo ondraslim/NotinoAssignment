@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using WebApiVersion.Models;
 using WebApiVersion.Services.Serializers;
+using WebApiVersion.Tests.Utils;
 
 namespace WebApiVersion.Tests;
 

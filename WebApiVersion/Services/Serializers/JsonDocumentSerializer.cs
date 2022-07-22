@@ -10,7 +10,7 @@ public class JsonDocumentSerializer : IJsonDocumentSerializer
     {
         var stream = new MemoryStream();
         JsonSerializer.Serialize(stream, documentModel);
-        stream.Seek(0, SeekOrigin.Begin);
+        stream.Position = 0;
 
         return stream;
     }

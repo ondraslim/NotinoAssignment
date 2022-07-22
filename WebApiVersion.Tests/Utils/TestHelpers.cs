@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace WebApiVersion.Tests;
+namespace WebApiVersion.Tests.Utils;
 
 public static class TestHelpers
 {

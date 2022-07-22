@@ -12,7 +12,7 @@ public class XmlDocumentSerializer : IXmlDocumentSerializer
     {
         var stream = new MemoryStream();
         xmlSerializer.Serialize(stream, documentModel);
-        stream.Seek(0, SeekOrigin.Begin);
+        stream.Position = 0;
 
         return stream;
     }

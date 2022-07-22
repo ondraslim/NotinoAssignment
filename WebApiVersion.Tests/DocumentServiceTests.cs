@@ -2,6 +2,7 @@
 using WebApiVersion.Models;
 using WebApiVersion.Services;
 using WebApiVersion.Services.Serializers;
+using WebApiVersion.Tests.Utils;
 
 namespace WebApiVersion.Tests;
 
@@ -14,7 +15,7 @@ public class DocumentServiceTests
     [TestCase(FileType.Json, FileType.Json)]
     public void Convert_CalledWithInvalidFileTypeCombination_ThrowsException(FileType sourceType, FileType targetType)
     {
-        var documentService = new DocumentService(new XmlDocumentSerializer(), new JsonDocumentSerializer());
+        var documentService = new DocumentService(new XmlDocumentSerializer(), new JsonDocumentSerializer(), new DefaultHttpClientFactory());
 
         Action act = () => documentService.ConvertDocument("", sourceType, targetType);
 
@@ -28,7 +29,7 @@ public class DocumentServiceTests
     [TestCase("", "")]
     public void Convert_JsonToXml_ConvertsCorrectly(string title, string text)
     {
-        var documentService = new DocumentService(new XmlDocumentSerializer(), new JsonDocumentSerializer());
+        var documentService = new DocumentService(new XmlDocumentSerializer(), new JsonDocumentSerializer(), new DefaultHttpClientFactory());
 
         var stream = documentService.ConvertDocument(TestHelpers.BuildDocumentModelJson(title, text), FileType.Json, FileType.Xml);
         using var streamReader = new StreamReader(stream);
@@ -46,7 +47,7 @@ public class DocumentServiceTests
     [TestCase("", "")]
     public void Convert_XmlToJson_ConvertsCorrectly(string title, string text)
     {
-        var documentService = new DocumentService(new XmlDocumentSerializer(), new JsonDocumentSerializer());
+        var documentService = new DocumentService(new XmlDocumentSerializer(), new JsonDocumentSerializer(), new DefaultHttpClientFactory());
 
         var stream = documentService.ConvertDocument(TestHelpers.BuildDocumentModelXml(title, text), FileType.Xml, FileType.Json);
         using var streamReader = new StreamReader(stream);

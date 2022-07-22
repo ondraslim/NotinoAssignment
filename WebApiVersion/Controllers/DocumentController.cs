@@ -41,15 +41,31 @@ namespace WebApiVersion.Controllers
             {
                 using var sr = new StreamReader(file.OpenReadStream());
                 var content = await sr.ReadToEndAsync();
-                var stream = documentService.ConvertDocument(content, sourceType, targetType);
-                return new FileStreamResult(stream, Path.GetExtension(file.FileName));
+                var documentDownload = documentService.ConvertDocument(content, sourceType, targetType);
+                return File(documentDownload.Stream, documentDownload.Mime, $"{Path.GetFileNameWithoutExtension(file.FileName)}{documentDownload.Extension}");
             }
             catch (Exception e)
             {
                 //log
-                return BadRequest();
+                return BadRequest(e.ToString());
             }
             // TODO: catch different exceptions based on the nature of the error
+        }
+
+        [HttpGet]
+        [Route("UrlDownload")]
+        public async Task<IActionResult> UrlDownload([FromQuery] string url)
+        {
+            try
+            {
+                var documentDownloadModel = await documentService.DownloadFromUrlAsync(url);
+                return File(documentDownloadModel.Stream, documentDownloadModel.Mime ?? "application/octet-stream", "urlDownload");
+            }
+            catch (Exception e)
+            {
+                // log
+                return BadRequest();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using WebApiVersion.Services;
+using WebApiVersion.Services.Serializers;
 using WebApiVersion.Services.Serializers.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,13 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IDocumentService, DocumentService>();
 
-builder.Services.Scan(sc => sc
-    .FromExecutingAssembly()
-        .AddClasses(classes => classes.AssignableTo<IDocumentSerializer>())
-            .AsSelfWithInterfaces()
-            .WithSingletonLifetime());
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<IDocumentService, DocumentService>();
+builder.Services.AddSingleton<IXmlDocumentSerializer, XmlDocumentSerializer>();
+builder.Services.AddSingleton<IJsonDocumentSerializer, JsonDocumentSerializer>();
 
 
 var app = builder.Build();
