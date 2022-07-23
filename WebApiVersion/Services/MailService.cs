@@ -8,7 +8,8 @@ public interface IMaiLService
     void SendEmail(string to, string @from, string subject, string text, DocumentDownloadModel document);
 }
 
-public class EmailService : IMaiLService
+
+public class MailService : IMaiLService
 {
     public void SendEmail(string from, string to, string subject, string body, DocumentDownloadModel document)
     {

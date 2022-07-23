@@ -46,14 +46,13 @@ namespace WebApiVersion.Controllers
         [HttpPost]
         public async Task<IActionResult> Save(IFormFile file, string path)
         {
+            // is it ok to allow file save under any path? 
             // validate in document service, throw exception, convert to result in exception filter
-
             // maybe other checks such as file size
             using var sr = new StreamReader(file.OpenReadStream());
             var content = await sr.ReadToEndAsync();
             try
             {
-                path = $"{env.WebRootPath}/{path}";
                 documentService.SaveDocumentAsync(file.ContentType, content, path);
             }
             catch (Exception e)
@@ -70,6 +69,7 @@ namespace WebApiVersion.Controllers
         {
             try
             {
+                // is it ok to allow file retrieval under any path? 
                 var documentDownload = documentService.GetDocument(path);
                 return File(documentDownload.Stream, documentDownload.Mime, documentDownload.Extension);
             }

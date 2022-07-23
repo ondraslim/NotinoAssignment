@@ -90,7 +90,7 @@ public class DocumentService : IDocumentService
         return new DocumentDownloadModel(stream, mime, extension);
     }
 
-    
+
     private IDocumentSerializer GetSerializerForType(FileType sourceType)
         => sourceType switch
         {
@@ -99,7 +99,7 @@ public class DocumentService : IDocumentService
             FileType.Unknown => throw new ArgumentException(),
             _ => throw new ArgumentOutOfRangeException(nameof(sourceType), sourceType, null)
         };
-
+    
     private static string GetExtensionForFileType(FileType sourceType)
         => sourceType switch
         {
